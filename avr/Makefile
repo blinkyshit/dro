@@ -1,7 +1,7 @@
 CC=avr-gcc
-CFLAGS=-g -Os -Wall -I../include -I../mixer -mcall-prologues -mmcu=atmega328 -D F_CPU=16000000UL
+CFLAGS=-g -Os -Wall -I../include -I../mixer -mcall-prologues -mmcu=atmega328p -D F_CPU=16000000UL
 OBJ2HEX=avr-objcopy 
-TARGET=main.c
+TARGET=main
 
 program: $(TARGET).hex 
 	sudo avrdude -p m328p -P usb -c avrispmkII -Uflash:w:$(TARGET).hex -B 1.0

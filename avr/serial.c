@@ -82,8 +82,8 @@ int getData(void) {
 }
 
 int x_zero(void) {
-
-	for(int8_t i = rx_head; i != rx_tail; i++, i &= (RX_BUFF_LEN-1)){
+        int8_t i;
+	for(i = rx_head; i != rx_tail; i++, i &= (RX_BUFF_LEN-1)){
 		if (rx_buff[i] == 'x') {
 			return 1;
 		}
@@ -92,8 +92,8 @@ int x_zero(void) {
 }
 
 int y_zero(void) {
-
-	for(int8_t i = rx_head; i != rx_tail; i++, i &= (RX_BUFF_LEN-1)){
+        int8_t i;
+	for(i = rx_head; i != rx_tail; i++, i &= (RX_BUFF_LEN-1)){
 		if (rx_buff[i] == 'y') {
 			return 1;
 		}
@@ -101,8 +101,8 @@ int y_zero(void) {
 	return 0;
 }
 int z_zero(void) {
-
-	for(int8_t i = rx_head; i != rx_tail; i++, i &= (RX_BUFF_LEN-1)){
+        int8_t i;
+	for(i = rx_head; i != rx_tail; i++, i &= (RX_BUFF_LEN-1)){
 		if (rx_buff[i] == 'z') {
 			return 1;
 		}
@@ -110,8 +110,8 @@ int z_zero(void) {
 	return 0;
 }
 int return_present(void) {
-
-	for(int8_t i = rx_head; i != rx_tail; i++, i &= (RX_BUFF_LEN-1)){
+        int8_t i;
+	for(i = rx_head; i != rx_tail; i++, i &= (RX_BUFF_LEN-1)){
 		if (rx_buff[i] == '\r') {
 			return 1;
 		}
