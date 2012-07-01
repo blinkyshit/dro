@@ -9,8 +9,8 @@ program: $(TARGET).hex
 $(TARGET).hex: $(TARGET).obj
 	$(OBJ2HEX) -R .eeprom -O ihex $< $@
 
-$(TARGET).obj: $(TARGET).o 
-	$(CC) $(CFLAGS) -o $@ -Wl,-Map,$(TARGET).map $(TARGET).o 
+$(TARGET).obj: $(TARGET).o serial.o
+	$(CC) $(CFLAGS) -o $@ -Wl,-Map,$(TARGET).map $(TARGET).o serial.o
 
 clean:
 	rm -f *.hex *.obj *.o *.map
