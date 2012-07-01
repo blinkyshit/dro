@@ -57,9 +57,9 @@ PAGE = '''<html>
     </style>
 </head>
 <body>
-<div class="outaxis"><a class="zero" href="" >x axis: </a><span class="inaxis" id="data0"></span><a id="z0" class="conv" href="" >in</a></br></div>
-<div class="outaxis"><a class="zero" href="" >y axis: </a><span class="inaxis" id="data1"></span><a id="z1" class="conv" href="" >in</a></br></div>
-<div class="outaxis"><a class="zero" href="" >z axis: </a><span class="inaxis" id="data2"></span><a id="z2" class="conv" href="" >in</a></div>
+<div class="outaxis"><a class="zero" onclick="zero('x')">x axis: </a><span class="inaxis" id="data0"></span><a id="z0" class="conv" href="" >in</a></br></div>
+<div class="outaxis"><a class="zero" onclick="zero('y')">y axis: </a><span class="inaxis" id="data1"></span><a id="z1" class="conv" href="" >in</a></br></div>
+<div class="outaxis"><a class="zero" onclick="zero('z')">z axis: </a><span class="inaxis" id="data2"></span><a id="z2" class="conv" href="" >in</a></div>
 </body>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript">
@@ -73,13 +73,13 @@ $(document).ready(function()
     socket.onopen = function (e) { onopen(e) };
 });
 var el = document.getElementById('z0');
-el.onclick = zero;
+el.onclick = change_units;
 var el = document.getElementById('z1');
-el.onclick = zero;
+el.onclick = change_units;
 var el = document.getElementById('z2');
-el.onclick = zero;
+el.onclick = change_units;
 
-function zero() {
+function change_units() {
   if ($("#z0").text() === 'in'){
     $("#z0").text('mm');
     $("#z1").text('mm');
@@ -92,6 +92,15 @@ function zero() {
   }	  
   return false;
 }
+function zero(axis)
+{
+//    if (axis != 'x' || axis != 'y' || axis != 'z')
+//        return;
+
+    socket.send(axis);
+    alert("axis " + axis + " reset");
+}
+
 function onopen(e)
 {
 }
