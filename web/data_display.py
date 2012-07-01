@@ -7,6 +7,7 @@ import threading
 import cherrypy
 import time
 import serial
+import sys
 
 from ws4py.server.cherrypyserver import WebSocketPlugin, WebSocketTool
 from ws4py.websocket import WebSocket
@@ -94,11 +95,7 @@ function change_units() {
 }
 function zero(axis)
 {
-//    if (axis != 'x' || axis != 'y' || axis != 'z')
-//        return;
-
     socket.send(axis);
-    alert("axis " + axis + " reset");
 }
 
 function onopen(e)
@@ -142,17 +139,23 @@ function onclose(e)
 ''';
 
 class DataSource(threading.Thread):
+    def stop_running(self):
+        self.running = False
+
+    def send(self, msg):
+        self.ser.write(msg)
+
     def run(self):        
+        self.running = True
         client = self._Thread__kwargs['client']
-        ser = serial.Serial(COM_PORT,9600)
+        self.ser = serial.Serial(COM_PORT,9600)
         print "opened '%s'" % COM_PORT
-        client.send("hello world!\n")
 
         buffer = ''
         #last_received = ''
         
-        while True:
-            buffer = buffer + ser.read(ser.inWaiting())
+        while self.running:
+            buffer = buffer + self.ser.read(self.ser.inWaiting())
             if '\n' in buffer:
                 lines = buffer.split('\n') # Guaranteed to have at least 2 entries
                 last_received = lines[-2]
@@ -162,11 +165,11 @@ class DataSource(threading.Thread):
                 buffer = lines[-1]
                 client.send(last_received)
                     
-            #val = ser.readline().decode('ascii').strip()
+            #val = self.ser.readline().decode('ascii').strip()
             #client.send(val + "<br>\n")
 
         client.send("We're done now!")
-        ser.close()
+        self.ser.close()
     
 class DataSourceWebSocketHandler(WebSocket):
     def opened(self):
@@ -175,11 +178,11 @@ class DataSourceWebSocketHandler(WebSocket):
 
     def received_message(self, m):
         print "received", m
+        self.data_source.send(str(m))
 
-    def closed(self, code, reason="A client left the room without a proper explanation."):
+    def closed(self, code, reason=""):
         print "socket closed"
-        self.data_source.exit()
-        # call to the thread and tell it to exit (serial_thread.exit())
+        self.data_source.stop_running()
 
 class Root(object):
     def __init__(self, host, port, ssl=False):
